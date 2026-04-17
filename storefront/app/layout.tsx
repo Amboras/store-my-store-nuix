@@ -1,6 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Lato, Inter } from 'next/font/google'
+import { Space_Grotesk, Space_Mono } from 'next/font/google'
 import { Providers } from './providers'
 import Header from '@/components/layout/header'
 import Footer from '@/components/layout/footer'
@@ -14,26 +14,26 @@ import dynamic from 'next/dynamic'
 
 const CookieConsent = dynamic(() => import('@/components/cookie-consent'))
 
-const heading = Lato({
+const heading = Space_Grotesk({
   subsets: ['latin'],
-  weight: ['400', '700'],
+  weight: ['400', '500', '600', '700'],
   variable: '--font-heading',
   display: 'swap',
 })
 
-const body = Inter({
+const body = Space_Mono({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
+  weight: ['400', '700'],
   variable: '--font-body',
   display: 'swap',
 })
 
 export const metadata: Metadata = {
   title: {
-    default: 'Store — Modern Commerce',
-    template: '%s | Store',
+    default: 'NUIX — Premium Graphic Apparel',
+    template: '%s | NUIX',
   },
-  description: 'Discover curated products crafted with care. A modern ecommerce experience.',
+  description: 'Luxury editorial streetwear. Premium graphic apparel crafted for the few who define culture, not follow it.',
 }
 
 export default function RootLayout({

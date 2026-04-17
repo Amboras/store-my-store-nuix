@@ -5,7 +5,12 @@ import { ArrowRight } from 'lucide-react'
 import ProductGrid from '@/components/product/product-grid'
 
 interface CollectionSectionProps {
-  collection: any
+  collection: {
+    id: string
+    handle: string
+    title: string
+    metadata?: Record<string, unknown>
+  }
   alternate?: boolean
 }
 
@@ -14,27 +19,35 @@ export default function CollectionSection({ collection, alternate }: CollectionS
   const hasDescription = typeof description === 'string' && description
 
   return (
-    <section className={`py-section ${alternate ? 'bg-muted/30' : ''}`}>
+    <section className={`py-section ${alternate ? 'bg-muted/20' : 'bg-background'}`}>
       <div className="container-custom">
-        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-10">
+        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mb-12">
           <div>
-            <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-2">
-              Collection
-            </p>
-            <h2 className="text-h2 font-heading font-semibold">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="h-px w-6" style={{ backgroundColor: '#c9933a' }} />
+              <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground">
+                Collection
+              </p>
+            </div>
+            <h2
+              className="font-heading font-bold"
+              style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.25rem)', letterSpacing: '-0.02em' }}
+            >
               {collection.title}
             </h2>
             {hasDescription && (
-              <p className="text-muted-foreground mt-2 max-w-lg">{description}</p>
+              <p className="text-muted-foreground mt-2 max-w-md text-sm leading-relaxed">
+                {description}
+              </p>
             )}
           </div>
           <Link
             href={`/collections/${collection.handle}`}
-            className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide link-underline pb-0.5 whitespace-nowrap"
+            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
             prefetch={true}
           >
             View All
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
         <ProductGrid collectionId={collection.id} limit={4} />

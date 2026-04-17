@@ -25,14 +25,10 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Focus close button when mobile menu opens
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      mobileMenuCloseRef.current?.focus()
-    }
+    if (isMobileMenuOpen) mobileMenuCloseRef.current?.focus()
   }, [isMobileMenuOpen])
 
-  // Close mobile menu on Escape
   useEffect(() => {
     if (!isMobileMenuOpen) return
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -42,7 +38,6 @@ export default function Header() {
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [isMobileMenuOpen])
 
-  // Focus trap for mobile menu
   const handleMobileMenuKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key !== 'Tab' || !mobileMenuRef.current) return
     const focusable = mobileMenuRef.current.querySelectorAll<HTMLElement>(
@@ -52,11 +47,9 @@ export default function Header() {
     const first = focusable[0]
     const last = focusable[focusable.length - 1]
     if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault()
-      last.focus()
+      e.preventDefault(); last.focus()
     } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault()
-      first.focus()
+      e.preventDefault(); first.focus()
     }
   }, [])
 
@@ -65,69 +58,89 @@ export default function Header() {
       <header
         className={`sticky top-0 z-40 w-full transition-all duration-300 ${
           isScrolled
-            ? 'bg-background/95 backdrop-blur-md border-b shadow-sm'
-            : 'bg-background border-b'
+            ? 'bg-background/95 backdrop-blur-md border-b border-border shadow-[0_1px_0_0_rgba(255,255,255,0.04)]'
+            : 'bg-background border-b border-border'
         }`}
       >
         <div className="container-custom">
           <div className="flex h-16 items-center justify-between gap-4">
+
             {/* Mobile menu toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="p-2 -ml-2 lg:hidden hover:opacity-70 transition-opacity"
+              className="p-2 -ml-2 lg:hidden hover:opacity-60 transition-opacity"
               aria-label="Open menu"
             >
               <Menu className="h-5 w-5" />
             </button>
 
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
-              <span className="font-heading text-2xl font-semibold tracking-tight">
-                Store
+            {/* Wordmark */}
+            <Link href="/" className="flex items-center">
+              <span
+                className="font-heading font-bold tracking-[0.22em] uppercase text-xl"
+                style={{ letterSpacing: '0.22em' }}
+              >
+                NUIX
               </span>
             </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-8">
-              <Link href="/products" className="text-sm tracking-wide uppercase link-underline py-1" prefetch={true}>
+              <Link
+                href="/products"
+                className="text-xs tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors py-1"
+                prefetch={true}
+              >
                 Shop All
               </Link>
-              {collections?.slice(0, 4).map((collection: any) => (
+              {collections?.slice(0, 4).map((collection: { id: string; handle: string; title: string }) => (
                 <Link
                   key={collection.id}
                   href={`/collections/${collection.handle}`}
-                  className="text-sm tracking-wide uppercase link-underline py-1"
+                  className="text-xs tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors py-1"
                   prefetch={true}
                 >
                   {collection.title}
                 </Link>
               ))}
+              <Link
+                href="/about"
+                className="text-xs tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors py-1"
+                prefetch={true}
+              >
+                About
+              </Link>
             </nav>
 
             {/* Actions */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-0.5">
               <Link
                 href="/search"
-                className="p-2.5 hover:opacity-70 transition-opacity"
+                className="p-2.5 text-muted-foreground hover:text-foreground transition-colors"
                 aria-label="Search"
               >
-                <Search className="h-5 w-5" />
+                <Search className="h-4.5 w-4.5" strokeWidth={1.5} />
               </Link>
               <Link
                 href={isLoggedIn ? '/account' : '/auth/login'}
-                className="p-2.5 hover:opacity-70 transition-opacity hidden sm:block"
+                className="p-2.5 text-muted-foreground hover:text-foreground transition-colors hidden sm:block"
                 aria-label={isLoggedIn ? 'Account' : 'Sign in'}
               >
-                {isLoggedIn ? <User className="h-5 w-5" /> : <LogIn className="h-5 w-5" />}
+                {isLoggedIn
+                  ? <User className="h-4.5 w-4.5" strokeWidth={1.5} />
+                  : <LogIn className="h-4.5 w-4.5" strokeWidth={1.5} />}
               </Link>
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-2.5 hover:opacity-70 transition-opacity"
+                className="relative p-2.5 text-muted-foreground hover:text-foreground transition-colors"
                 aria-label="Shopping bag"
               >
-                <ShoppingBag className="h-5 w-5" />
+                <ShoppingBag className="h-4.5 w-4.5" strokeWidth={1.5} />
                 {itemCount > 0 && (
-                  <span className="absolute top-0.5 right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-foreground text-[10px] font-bold text-background">
+                  <span
+                    className="absolute top-1 right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full text-[9px] font-bold text-black"
+                    style={{ backgroundColor: '#c9933a' }}
+                  >
                     {itemCount}
                   </span>
                 )}
@@ -141,7 +154,7 @@ export default function Header() {
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
             onClick={() => setIsMobileMenuOpen(false)}
           />
           <div
@@ -150,61 +163,70 @@ export default function Header() {
             aria-modal="true"
             aria-label="Navigation menu"
             onKeyDown={handleMobileMenuKeyDown}
-            className="absolute inset-y-0 left-0 w-80 max-w-[85vw] bg-background animate-slide-in-right"
+            className="absolute inset-y-0 left-0 w-80 max-w-[85vw] bg-background border-r border-border animate-slide-in-right"
           >
-            <div className="flex items-center justify-between p-4 border-b">
-              <span className="font-heading text-xl font-semibold">Menu</span>
+            <div className="flex items-center justify-between px-6 py-5 border-b border-border">
+              <span className="font-heading font-bold tracking-[0.22em] uppercase text-lg">NUIX</span>
               <button
                 ref={mobileMenuCloseRef}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="p-2 hover:opacity-70"
+                className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
                 aria-label="Close menu"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <nav className="p-4 space-y-1">
+            <nav className="px-6 py-6 space-y-1">
               <Link
                 href="/products"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block py-3 text-lg tracking-wide border-b border-border/50"
+                className="block py-3.5 text-sm tracking-[0.1em] uppercase border-b border-border/40 text-muted-foreground hover:text-foreground transition-colors"
                 prefetch={true}
               >
                 Shop All
               </Link>
-              {collections?.map((collection: any) => (
+              {collections?.map((collection: { id: string; handle: string; title: string }) => (
                 <Link
                   key={collection.id}
                   href={`/collections/${collection.handle}`}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block py-3 text-lg tracking-wide border-b border-border/50"
+                  className="block py-3.5 text-sm tracking-[0.1em] uppercase border-b border-border/40 text-muted-foreground hover:text-foreground transition-colors"
                   prefetch={true}
                 >
                   {collection.title}
                 </Link>
               ))}
-              <div className="pt-4 space-y-1">
+              <Link
+                href="/about"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block py-3.5 text-sm tracking-[0.1em] uppercase border-b border-border/40 text-muted-foreground hover:text-foreground transition-colors"
+                prefetch={true}
+              >
+                About
+              </Link>
+              <div className="pt-6 space-y-1">
                 <Link
                   href={isLoggedIn ? '/account' : '/auth/login'}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block py-3 text-muted-foreground"
+                  className="block py-3 text-xs tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  {isLoggedIn ? 'Account' : 'Sign In'}
+                  {isLoggedIn ? 'My Account' : 'Sign In'}
                 </Link>
                 <Link
                   href="/search"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block py-3 text-muted-foreground"
+                  className="block py-3 text-xs tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Search
                 </Link>
               </div>
             </nav>
+            {/* Bottom brand accent */}
+            <div className="absolute bottom-0 left-0 right-0 h-1" style={{ backgroundColor: '#c9933a' }} />
           </div>
         </div>
       )}
 
-      {/* Cart Drawer */}
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </>
   )
